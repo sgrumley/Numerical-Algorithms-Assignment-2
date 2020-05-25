@@ -53,8 +53,8 @@ void GSS(double xl, double xu) {
 
 int main() {
     // Q3golden-section seacrch
-    double xl = 5.0;
-    double xu = 10.0;
+    double xl = 4.0;
+    double xu = 13.0;
 
     GSS(xl, xu);
 }

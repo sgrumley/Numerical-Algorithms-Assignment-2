@@ -2,93 +2,116 @@
 
 using namespace std;
 
-int LU()
-{
-    int n, i, k, j, p;
+void LU(int n) {
     double l[10][10] = { 0 }, u[10][10] = { 0 }, sum,  z[10] = { 0 }, x[10] = { 0 };
 
+
+    // b
+    // double a[4][4] = {
+    //     { 0, 0,  0,  0                  },
+    //     { 0, 6,  0,  -1                 },
+    //     { 0, 0,  3,  -1                 },
+    //     { 0, 25, 12, -8                 }
+    // };
+
+    // double b[4] = {
+    //     0,
+    //     400,
+    //     400,
+    //     3600
+    // };
+
+    // a
     double a[4][4] = {
-        { 0, 0,   0,   0   },
-        { 0, 25,  5,   1   },
-        { 0, 64,  8,   1   },
-        { 0, 144, 12,  1   }
+        { 0, 0,  0,   0                       },
+        { 0, 2,  -6,  -1                      },
+        { 0, -3, -1,  7                       },
+        { 0, -8, 1,   -2                      }
     };
 
     double b[4] = {
         0,
-        106.8,
-        177.2,
-        279.2
+        -38.0,
+        -34.0,
+        -20
     };
 
-    n = 3;
 
-    for (k = 1; k <= n; k++) {
-        u[k][k] = 1;
+    // Make L U
+    for (int i = 1; i <= n; i++) {
+        u[i][i] = 1;
 
-        for (i = k; i <= n; i++) {
+        // Upper triange
+        for (int j = i; j <= n; j++) {
             sum = 0;
 
-            for (p = 1; p <= k - 1; p++) {
-                sum += l[i][p] * u[p][k];
+            for (int k = 1; k <= i - 1; k++) {
+                sum += l[j][k] * u[k][i];
             }
-            l[i][k] = a[i][k] - sum;
+            l[j][i] = a[j][i] - sum;
         }
 
-        for (j = k + 1; j <= n; j++) {
+        // Lower triangle
+        for (int j = i + 1; j <= n; j++) {
             sum = 0;
 
-            for (p = 1; p <= k - 1; p++) {
-                sum += l[k][p] * u[p][j];
+            for (int k = 1; k <= i - 1; k++) {
+                sum += l[i][k] * u[k][j];
             }
-            u[k][j] = (a[k][j] - sum) / l[k][k];
+            u[i][j] = (a[i][j] - sum) / l[i][i];
         }
-    }
-
-    cout << endl << endl << "LU matrix is " << endl;
-
-    for (i = 1; i <= n; i++) {
-        for (j = 1; j <= n; j++) cout << l[i][j] << "  ";
-        cout << endl;
-    }
-    cout << endl;
-
-    for (i = 1; i <= n; i++) {
-        for (j = 1; j <= n; j++) cout << u[i][j] << "  ";
         cout << endl;
     }
 
-    for (i = 1; i <= n; i++) {
+
+    cout << "L Matrix" << endl;
+
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= n; j++) cout << l[i][j] << "  ";
+        cout << endl;
+    }
+
+    cout << endl << "U Matrix" << endl;
+
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= n; j++) cout << u[i][j] << "  ";
+        cout << endl;
+    }
+
+    // Solve for Ax = b
+    // Forward substitution - Lx = b
+    for (int i = 1; i <= n; i++) {
         sum = 0;
 
-        for (p = 1; p < i; p++) {
-            sum += l[i][p] * z[p];
+        for (int j = 1; j < i; j++) {
+            sum += l[i][j] * z[j];
         }
         z[i] = (b[i] - sum) / l[i][i];
     }
 
-    for (i = n; i > 0; i--) {
+    // Backward substitution - Ux = b
+    for (int i = n; i > 0; i--) {
         sum = 0;
 
-        for (p = n; p > i; p--) {
-            sum += u[i][p] * x[p];
+        for (int j = n; j > i; j--) {
+            sum += u[i][j] * x[j];
         }
         x[i] = (z[i] - sum) / u[i][i];
     }
 
-    // *********** DISPLAYING SOLUTION**************//
-    cout << endl << "Set of solution is" << endl;
+    char pr[4] = { 'a', 'x', 'y', 'z' };
+    cout << endl << "Resulting values: " << endl;
 
-    for (i = 1; i <= n; i++) {
-        cout << endl << x[i];
+    for (int i = 1; i <= n; i++) {
+        cout << pr[1] << i << " = " << x[i] << endl;
     }
-
-    return 0;
 }
 
 int main() {
     // Q
-    LU();
+    int n = 3;
+
+    LU(n);
 }
 
 // // convert to upper triangular form

@@ -32,37 +32,62 @@ double dydt(double x, double y) {
     return -c * y + d * x * y;
 }
 
-// Finds value of y for a given x using step size h
-// and initial value y0 at x0.
-double RK(double t0, double xy0, double t, double h) {
-    // int n = (int)((t - t0) / h);
-    int n = 30;
+double RKy(double x0, double y0, double x, double h) {
+    int n = (int)((x - x0) / h);
+
+    // int n = 30;
 
     double k1, k2, k3, k4, k5;
-    double xy = xy0;
+    double y = y0;
 
     for (int i = 1; i <= n; i++) {
-        k1 = h * dxdt(t0, xy);
-        k2 = h * dxdt(t0 + h / 2, xy +  k1 / 2);
-        k3 = h * dxdt(t0 + h / 2, xy +  k2 / 2);
-        k4 = h * dxdt(t0 + h, xy + k3);
+        k1 = h * dydt(x0, y);
+        k2 = h * dydt(x0 + h / 2, y +  k1 / 2);
+        k3 = h * dydt(x0 + h / 2, y +  k2 / 2);
+        k4 = h * dydt(x0 + h, y + k3);
 
         // Update x and y
-        t0 = t0 + h;
-        xy = xy  + (k1 + 2 * k2 + 2 * k3 + k4) / 6;
-        cout << t0 << ", " << xy << endl;
+        x = x0 + h;
+        y = y  + (k1 + 2 * k2 + 2 * k3 + k4) / 6;
+
+        // cout << x << ", " << y << endl;
     }
 
-    return xy;
+    return y;
 }
 
-// Driver method
+double RKx(double x0, double y0, double x, double h) {
+    int n = (int)((x - x0) / h);
+
+    // int n = 30;
+
+    double k1, k2, k3, k4, k5;
+    double y = y0;
+
+    for (int i = 1; i <= n; i++) {
+        k1 = h * dxdt(x0, y);
+        k2 = h * dxdt(x0 + h / 2, y +  k1 / 2);
+        k3 = h * dxdt(x0 + h / 2, y +  k2 / 2);
+        k4 = h * dxdt(x0 + h, y + k3);
+
+        // Update x and y
+        x = x0 + h;
+        y = y  + (k1 + 2 * k2 + 2 * k3 + k4) / 6;
+
+        //     cout << x << ", " << y << endl;
+    }
+
+    return y;
+}
+
 int main() {
-    double t0 = 0, xy = 1, t = 2, h = 1.0;
-    vector<double> xVal;
-    vector<double> yVal;
+    double x0 = 0, y = 1, x = 2, h = 0.1;
 
-    double res = RK(t0, xy, t, h);
 
-    cout << res << endl;
+    double yRes = RKy(x0, y, x, h);
+
+    double xRes = RKx(x0, x, y, h);
+
+    cout << "value of x at t " << xRes << endl;
+    cout << "value of y at t " << yRes << endl;
 }
